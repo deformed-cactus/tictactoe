@@ -23,6 +23,7 @@
   background-color: #04AA6D;
 }
 
+/* Tic Tac Toe Cell Buttons */
 .cell {
   color: #216fff;
 }
@@ -31,7 +32,6 @@
   background-color: #219fff;
   color: white;
 }
-
 
 </style>
 <script>
@@ -66,10 +66,9 @@ class Game {
     this.turn *= -1;
 
     //Now check if someone won
-    if(this.move > 3){
+    if(this.move > 4){
       this.checkForWinner();
     }
-
   }
 
   //checks the board for a winner
@@ -105,7 +104,6 @@ class Game {
         return;
       }
     }
-
   }
 
   //Returns the desired column as a string.
@@ -166,7 +164,6 @@ class Game {
 
     //Reset game status message.
     document.getElementById("Game Status").innerHTML = "No Winner";
-
   }
 }
 

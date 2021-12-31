@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+.btn {
+  border: none;
+  background-color: inherit;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+/* New Game Button */
+.ng {
+  background-color: green;
+  color: white;
+  border-radius: 50px;
+}
+
+.ng:hover {
+  background-color: #04AA6D;
+}
+
+.cell {
+  color: #216fff;
+}
+
+.cell:hover {
+  background-color: #219fff;
+  color: white;
+}
+
+
+</style>
+<script>
+'use strict';
+
+class Game {
+  constructor(buttonIDs) {
+    this.board = [
+      ['N', 'N', 'N'],
+      ['N', 'N', 'N'],
+      ['N', 'N', 'N']
+  ];
+    this.turn = 1;
+    this.move = 0;
+    this.buttonIDs = buttonIDs;
+  }
+
+  //Updates the board when a button is clicked.
+  updateBoard(x, y, id) {
+    this.move++;
+    if (this.turn == 1) {
+      this.board[x][y] = 'X';
+      document.getElementById(id).innerHTML = "[X]";
+    } else if (this.turn == -1) {
+      this.board[x][y] = 'O';
+      document.getElementById(id).innerHTML = "[O]";
+    }
+
+    //Prevents further button presses
+    document.getElementById(id).disabled = true;
+
+    this.turn *= -1;
+
+    //Now check if someone won
+    if(this.move > 3){
+      this.checkForWinner();
+    }
+
+  }
+
+  //checks the board for a winner
+  checkForWinner() {
+    //Check diagonals
+    let ldiag = this.getLDiagonal();
+    let rdiag = this.getRDiagonal();
+
+    if(ldiag == "XXX" || rdiag == "XXX") {
+      document.getElementById("Game Status").innerHTML = "X Wins";
+      this.gameOver();
+      return;
+    }
+
+    else if(ldiag == "OOO" || rdiag == "OOO") {
+      document.getElementById("Game Status").innerHTML = "O Wins";
+      this.gameOver();
+      return;
+    }
+
+    //Check rows and columns
+    for(let i = 0; i < 3; i++) {
+      let column = this.getColumn(i);
+      let row    = this.getRow(i);
+      if(column == "XXX" || row == "XXX") {
+        document.getElementById("Game Status").innerHTML = "X Wins";
+        this.gameOver();
+        return;
+      }
+      else if(column == "OOO" || row == "OOO") {
+        document.getElementById("Game Status").innerHTML = "O Wins";
+        this.gameOver();
+        return;
+      }
+    }
+
+  }
+
+  //Returns the desired column as a string.
+  getColumn(_col) {
+    let column = this.board[0][_col];
+    column    += this.board[1][_col];
+    column    += this.board[2][_col];
+    return column;
+  }
+
+  //Returns the desired row as a string.
+  getRow(_row) {
+    let row = this.board[_row][0];
+    row    += this.board[_row][1];
+    row    += this.board[_row][2];
+    return row;
+  }
+
+  //Returns the left diagonal as a string.
+  getLDiagonal() {
+    let diag = this.board[0][0];
+    diag    += this.board[1][1];
+    diag    += this.board[2][2];
+    return diag;
+  }
+
+  //Returns the right diagonal as a string.
+  getRDiagonal() {
+    let diag = this.board[0][2];
+    diag    += this.board[1][1];
+    diag    += this.board[2][0];
+    return diag;
+  }
+
+  //When the game is over, prevent any further button presses.
+  gameOver() {
+    for(let i = 0; i < 9; i++) {
+    document.getElementById(this.buttonIDs[i]).disabled = true;
+    }
+  }
+
+  //Resets the game.
+  reset() {
+    //Resets the game members
+    this.turn = 1;
+    this.move = 0;
+    this.board = [
+      ['N', 'N', 'N'],
+      ['N', 'N', 'N'],
+      ['N', 'N', 'N']
+    ]
+
+    //Resets button text and ability to be pressed
+    for(let i = 0; i < 9; i++) {
+      document.getElementById(this.buttonIDs[i]).innerHTML = "[-]";
+      document.getElementById(this.buttonIDs[i]).disabled = false;
+    }
+
+    //Reset game status message.
+    document.getElementById("Game Status").innerHTML = "No Winner";
+
+  }
+}
+
+//Button ids
+const buttonIDs = ["zerozero",
+                   "zeroone",
+                   "zerotwo",
+                   "onezero",
+                   "oneone",
+                   "onetwo",
+                   "twozero",
+                   "twoone",
+                   "twotwo"
+]
+
+let newGame = new Game(buttonIDs);
+
+</script>
+</head>
+<body>
+  <h1>Tic Tac Toe</h1>
+
+  <p> <b> Instructions: </b>  Click any of the buttons labeled "[-]" to mark an "X" or "O". "X" automatically goes first. When the
+    game is concluded, click the "New Game" button to reset. Have fun! </p>
+
+  <p>
+    <button id = "New Game" class="btn ng" onclick = "newGame.reset();">New Game</button>
+
+  <!-- Shows the board -->
+  <p>
+    <button id = "zerozero" class="btn cell" onclick = "newGame.updateBoard(0, 0, buttonIDs[0]);">[-]</button>
+    <button id = "zeroone"  class="btn cell" onclick = "newGame.updateBoard(0, 1, buttonIDs[1]);">[-]</button>
+    <button id = "zerotwo"  class="btn cell" onclick = "newGame.updateBoard(0, 2, buttonIDs[2]);">[-]</button>
+  </p>
+  <p>
+    <button id = "onezero"  class="btn cell" onclick = "newGame.updateBoard(1, 0, buttonIDs[3]);">[-]</button>
+    <button id = "oneone"   class="btn cell" onclick = "newGame.updateBoard(1, 1, buttonIDs[4]);">[-]</button>
+    <button id = "onetwo"   class="btn cell" onclick = "newGame.updateBoard(1, 2, buttonIDs[5]);">[-]</button>
+  </p>
+  <p>
+    <button id = "twozero"  class="btn cell" onclick = "newGame.updateBoard(2, 0, buttonIDs[6]);">[-]</button>
+    <button id = "twoone"   class="btn cell" onclick = "newGame.updateBoard(2, 1, buttonIDs[7]);">[-]</button>
+    <button id = "twotwo"   class="btn cell" onclick = "newGame.updateBoard(2, 2, buttonIDs[8]);">[-]</button>
+  </p>
+
+  <p id= "Game Status"> No Winner </p>
+
+</body>
+</html>

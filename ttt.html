@@ -44,8 +44,8 @@ class Game {
       ['N', 'N', 'N'],
       ['N', 'N', 'N']
   ];
-    this.turn = 1;
-    this.move = 0;
+    this.turn      = 1;
+    this.move      = 0;
     this.buttonIDs = buttonIDs;
   }
 
@@ -147,23 +147,7 @@ class Game {
 
   //Resets the game.
   reset() {
-    //Resets the game members
-    this.turn = 1;
-    this.move = 0;
-    this.board = [
-      ['N', 'N', 'N'],
-      ['N', 'N', 'N'],
-      ['N', 'N', 'N']
-    ]
-
-    //Resets button text and ability to be pressed
-    for(let i = 0; i < 9; i++) {
-      document.getElementById(this.buttonIDs[i]).innerHTML = "[-]";
-      document.getElementById(this.buttonIDs[i]).disabled = false;
-    }
-
-    //Reset game status message.
-    document.getElementById("Game Status").innerHTML = "No Winner";
+    location.reload();
   }
 }
 
